@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>CMIM • Queues</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap 5 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #0a0a0a, #111);
+  color: #fff;
+  min-height: 100vh;
+}
+
+.queue-card {
+  background: #000;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 0 30px rgba(255,193,7,.2);
+  border: 1px solid #222;
+}
+
+.queue-title {
+  font-weight: 800;
+  color: #ffc107;
+}
+
+.lane {
+  background: #111;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #222;
+}
+
+.lane span {
+  display: block;
+  font-size: 13px;
+  color: #aaa;
+}
+
+.slot {
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 6px;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.slot.empty {
+  color: #666;
+}
+
+.slot.filled {
+  color: #0f0;
+  font-weight: 600;
+}
+
+.btn-cmim {
+  background: #ffc107;
+  color: #000;
+  font-weight: 700;
+  border-radius: 30px;
+  padding: 10px 26px;
+  border: none;
+}
+
+.btn-cmim:hover {
+  background: #000;
+  color: #ffc107;
+  border: 1px solid #ffc107;
+}
+
+.btn-exit {
+  background: transparent;
+  border: 1px solid #ff4444;
+  color: #ff4444;
+  border-radius: 30px;
+  padding: 10px 26px;
+  font-weight: 700;
+}
+
+.btn-exit:hover {
+  background: #ff4444;
+  color: #000;
+}
+</style>
+</head>
+
+<body class="d-flex align-items-center justify-content-center">
+
+<div class="container">
+  <div class="queue-card">
+
+    <h2 class="queue-title text-center">🔥 Fila 20h — MD3</h2>
+    <p class="text-center text-secondary mb-4">
+      Entre na fila e aguarde o fechamento
+    </p>
+
+    <div class="row g-3 mb-4">
+
+      <!-- TIME A -->
+      <div class="col-md-6">
+        <h6 class="text-center text-warning">Time A</h6>
+        <div class="lane">TOP<span class="slot empty" id="a-top">Livre</span></div>
+        <div class="lane mt-2">JG<span class="slot empty" id="a-jg">Livre</span></div>
+        <div class="lane mt-2">MID<span class="slot empty" id="a-mid">Livre</span></div>
+        <div class="lane mt-2">ADC<span class="slot empty" id="a-adc">Livre</span></div>
+        <div class="lane mt-2">SUP<span class="slot empty" id="a-sup">Livre</span></div>
+      </div>
+
+      <!-- TIME B -->
+      <div class="col-md-6">
+        <h6 class="text-center text-warning">Time B</h6>
+        <div class="lane">TOP<span class="slot empty" id="b-top">Livre</span></div>
+        <div class="lane mt-2">JG<span class="slot empty" id="b-jg">Livre</span></div>
+        <div class="lane mt-2">MID<span class="slot empty" id="b-mid">Livre</span></div>
+        <div class="lane mt-2">ADC<span class="slot empty" id="b-adc">Livre</span></div>
+        <div class="lane mt-2">SUP<span class="slot empty" id="b-sup">Livre</span></div>
+      </div>
+
+    </div>
+
+    <div class="d-flex justify-content-center gap-3">
+      <button class="btn-cmim" onclick="entrarQueue()">Entrar na Queue</button>
+      <button class="btn-exit" onclick="sairQueue()">Sair</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let jogador = "11gaia11"; // futuramente vem do login
+let entrou = false;
+
+const slots = [
+  "a-top","a-jg","a-mid","a-adc","a-sup",
+  "b-top","b-jg","b-mid","b-adc","b-sup"
+];
+
+function entrarQueue() {
+  if (entrou) return alert("Você já está na queue!");
+
+  for (let id of slots) {
+    const el = document.getElementById(id);
+    if (el.classList.contains("empty")) {
+      el.textContent = jogador;
+      el.classList.remove("empty");
+      el.classList.add("filled");
+      entrou = true;
+      return;
+    }
+  }
+
+  alert("Queue cheia!");
+}
+
+function sairQueue() {
+  if (!entrou) return alert("Você não está na queue!");
+
+  for (let id of slots) {
+    const el = document.getElementById(id);
+    if (el.textContent === jogador) {
+      el.textContent = "Livre";
+      el.classList.remove("filled");
+      el.classList.add("empty");
+      entrou = false;
+      return;
+    }
+  }
+}
+</script>
+
+</body>
+</html>

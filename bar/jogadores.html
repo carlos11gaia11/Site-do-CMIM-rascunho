@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>CMIM – Players</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+body{background:#0e0e0e;color:#fff}
+
+.tier{font-weight:bold;padding:4px 10px;border-radius:6px;color:#fff}
+.S{background:gold;color:#000;box-shadow:0 0 10px gold}
+.Aplus{background:#8e44ad}
+.A{background:#2980b9}
+.Aminus{background:#3498db}
+.Bplus{background:#27ae60}
+.B{background:#2ecc71}
+.C{background:#f1c40f;color:#000}
+.D{background:#e67e22}
+.E{background:#e74c3c}
+.F{background:#7f8c8d}
+
+.insalubrao{background:#ff004c;padding:3px 8px;border-radius:12px;font-size:12px;font-weight:bold}
+.insalubrinho{background:#00bcd4;padding:3px 8px;border-radius:12px;font-size:12px;font-weight:bold;color:#000}
+</style>
+</head>
+
+<body>
+<div class="container mt-4">
+  <h2 class="text-center mb-3">CMIM – Controle Geral de Players</h2>
+  <button class="btn btn-success mb-3" onclick="addPlayer()">Adicionar Player</button>
+
+  <table id="cmimTable" class="table table-dark table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Nick</th>
+        <th>Tier</th>
+        <th>Role</th>
+        <th>Tag</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+const players = [
+ ["Neri#WoN","B","JGL"], ["BLG Faker #FLA","B","MID"], ["Julia Maceta#kat","C","MID"], ["Atualmente estou usando 2, DEDOS ANGELICAIS #XQDL, JUGK1NG #JUGK","D","JGL"], ["SBR Kutu Kuku#Secho","B","ADC"], ["corredato#nati","S","MID"], ["BT cblol#br1","A+","SUP"], ["Pipo#4117","A-","SUP"], ["souzqk#SOUZQ","F","SUP"], ["Kr0ft#Zer0","A+","ADC"], ["Matt Marion#BR1","C","SUP"], ["JhonJhon#br0","C","ADC"], ["Barbosa #081","A+","TOP"], ["hollowed ghhosty#bless","S","JGL"], ["MAXXTER#5136","D","MID"], ["Dark Sentence #BR1","A+","SUP"], ["TratorAuraFarm#T01","B","JGL"], ["detinhas#roze","A+","JGL"], ["Spreek #4e20","A-","TOP"], ["roseelol1#1609","A+","SUP"], ["Yaya#Miin","D","ADC"], ["shino#onihs","B","ADC"], ["C00BRA#br1","D","SUP"], ["Shaka #VlRG0","B","ADC"], ["Hidden#coral","A-","MID"], ["Guolherme21#br1","A","MID"], ["Eros#gap","A+","TOP"], ["Sleepwalker#Hope","A","ADC"], ["Froxy#knd","C","JGL"], ["Seeyaa #愛平和自由","C","MID"], ["VaiCrai #mordi","D","TOP"], ["Canário#avê","A","SUP"], ["ZNE Thigas#Nathy","A","JGL"], ["SBG Castiel#kaiez","D","JGL"], ["Lamine yamal 10#L10","C","JGL"], ["NøirCafé#Café","F","ADC"], ["Namelesss#EGO","B","JGL"], ["KRAVEN#223","E","ADC"], ["Synthwave#Paris","A-","MID"], ["FX wassflip02 # FX 01","D","SUP"], ["teteucantoni#BR1","A-","JGL"], ["11gaia11#000","C","MID"], ["disease#damn","S","ADC"], ["SBO Jessie #BDSM (Vou voltar com Karmasutra)","C","SUP"], ["TRÉPA DE LAJHIN#AUU","A-","MID"], ["Bravuss#caos","C","SUP"], ["Julin#4037","B","ADC"], ["maronato#rat","A","JGL"], ["Kendrick Mamar#krk","B+","MID"], ["Kerpp#1108","A+","ADC"], ["Diaboli L9#L 9","A","TOP"], ["LivyMoon#MOON","C","JGL"], ["Techy#777","A+","MID"], ["T1 Denver#AdGAP","C","ADC"], ["Shaser#BR1","D","MID"], ["Makashi #9718","D","ADC"], ["Jóquis#LOL","C","SUP"], ["LORD NOZDURMU#br1","B","TOP"], ["vicodines#adc","A","ADC"], ["Santrix#diff","A+","MID"], ["Destroyer #APPA","D","MID"], ["sammy gatinho#combo","D","ADC"], ["Powder#x3ad","A","ADC"], ["Srfm#PainG","A","SUP"], ["Bafufuba","A","TOP"], ["Capitã #br2","D","SUP"], ["ZuoShou#CHN","B","TOP"], ["Gabs Mattos#GABS","A-","SUP"], ["Arieda#000","C","SUP"], ["Mago#Mdv","E","ADC"], ["Imprevisto#kat","A-","MID"], ["Raikilol#007 / Raiki#Chill","A","MID"], ["Nobre#vf20 mais vou volta pra ZEUS#VF20","E","TOP"], ["Cross#BR62","A","JGL"], ["Feltrini #FEM","A","SUP"], ["Max#KI910","C","ADC"], ["AZ0#AZ0","A","TOP"], ["Princess Nilah#BR1","A","ADC"], ["BLS Ruiva#BLS","A","TOP"], ["estapafurdio#bobo","C","ADC"], ["Coringahelp#br1","B","TOP"], ["Eu me acho#fofo","B","SUP"], ["Laura Beatriz #baby","A-","TOP"], ["Coral #hiddn","C","SUP"], ["Endermanzinha#Br1","C","SUP"], ["KRAVEN#223","E","ADC"], ["Tube#4938","C","MID"], ["Sayu#KyL","S","MID"], ["Zé Felipe #Mizi","B","SUP"], ["dedef0daum#br1","C","ADC"], ["OLD TRYGART#BFR","C","MID"], ["etokinan#nikas","D","TOP"], ["Provérbios#TOPO","B","TOP"], ["Lisbon#Jugk","A+","JGL"], ["LORD NOZDURMU#br1","B","TOP"], ["Swigh dela K#Kety","B+","ADC"], ["Arroz Soltinho#Trem","A+","TOP"], ["Kuska#CAGOUUUUUU!!!","B","SUP"], ["Kaiser#bct","A+","TOP"], ["fesot#xxxxx","A+","ADC"], ["terraria enjoyer#bin","F","SUP"], ["Wolff#1998","C","SUP"], ["Marvelus Jack #BR1","C","SUP"], ["Juregkkj#JUREG","C","MID"], ["little nenis#okay","A-","MID"], ["Fate ninja#br1","A+","MID"], ["IZG Merliin#br1","B","ADC"], ["Father Ocean #sully","D","SUP"], ["Tchúles#9844","C","SUP"], ["Buratto#utb","A-","ADC"], ["Last Samurai X#007","B","JGL"], ["Amelie Florence#Serap","A-","MID"], ["NS Calix#Nshim","A-","MID"]
+];
+
+// ===== utilidades =====
+function tierClass(t){
+  return t.replace("+","plus").replace("-","minus");
+}
+
+function tierWeight(t){
+  const map = { "S":9,"A+":8,"A":7,"A-":6,"B+":5,"B":4,"C":3,"D":2,"E":1,"F":0 };
+  return map[t] ?? -1;
+}
+
+function tag(t){
+  return ["S","A+","A","A-"].includes(t)
+    ? '<span class="insalubrao">INSALUBRÃO</span>'
+    : '<span class="insalubrinho">INSALUBRINHO</span>';
+}
+
+function createRow(nick, tier, role){
+  return [
+    `<span contenteditable="true">${nick}</span>`,
+    `<span class="tier ${tierClass(tier)}" data-order="${tierWeight(tier)}" contenteditable="true">${tier}</span>`,
+    `<span contenteditable="true">${role}</span>`,
+    tag(tier),
+    `<button class="btn btn-danger btn-sm btn-del">Excluir</button>`
+  ];
+}
+
+// ===== DataTable =====
+const table = $("#cmimTable").DataTable({
+  order: [[1,"desc"]],
+  language:{
+    search:"Filtrar:",
+    lengthMenu:"Mostrar _MENU_",
+    info:"_TOTAL_ players",
+    paginate:{next:"▶",previous:"◀"}
+  }
+});
+
+// inserir dados
+players.forEach(p=>{
+  table.row.add(createRow(p[0],p[1],p[2]));
+});
+table.draw();
+
+// excluir linha corretamente
+$("#cmimTable").on("click",".btn-del",function(){
+  table.row($(this).parents("tr")).remove().draw();
+});
+
+// adicionar player
+function addPlayer(){
+  table.row.add(createRow("Novo Player","B","JGL")).draw(false);
+}
+</script>
+</body>
+</html>

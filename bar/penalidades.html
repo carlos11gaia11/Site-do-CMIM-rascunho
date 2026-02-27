@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão de Penalidades</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">⚖️ Gestão de Penalidades</h2>
+
+    <!-- FORMULÁRIO -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>Adicionar Penalidade</h5>
+            <div class="row g-2">
+                <div class="col-md-2">
+                    <input id="jogador" class="form-control" placeholder="Jogador">
+                </div>
+                <div class="col-md-2">
+                    <input id="tipo" class="form-control" placeholder="Penalidade">
+                </div>
+                <div class="col-md-1">
+                    <input id="dias" type="number" class="form-control" placeholder="Dias">
+                </div>
+                <div class="col-md-2">
+                    <input id="inicio" type="date" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <input id="pontos" type="number" class="form-control" placeholder="Pontos">
+                </div>
+                <div class="col-md-3">
+                    <button onclick="adicionarPenalidade()" class="btn btn-danger w-100">
+                        Aplicar Penalidade
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABAS -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#ativas">
+                Penalidades Ativas
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#historico">
+                Histórico
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3">
+
+        <!-- ATIVAS -->
+        <div class="tab-pane fade show active" id="ativas">
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Jogador</th>
+                        <th>Penalidade</th>
+                        <th>Início</th>
+                        <th>Término</th>
+                        <th>Pontos</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="ativasBody"></tbody>
+            </table>
+        </div>
+
+        <!-- HISTÓRICO -->
+        <div class="tab-pane fade" id="historico" >
+            <table class="table table-striped text-center">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>Jogador</th>
+                        <th>Penalidade</th>
+                        <th>Período</th>
+                        <th>Pontos</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="historicoBody"></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let historico = JSON.parse(localStorage.getItem("historico")) || [];
+
+function salvar() {
+    localStorage.setItem("historico", JSON.stringify(historico));
+}
+
+function render() {
+    const ativasBody = document.getElementById("ativasBody");
+    const historicoBody = document.getElementById("historicoBody");
+
+    ativasBody.innerHTML = "";
+    historicoBody.innerHTML = "";
+
+    const hoje = new Date();
+    hoje.setHours(0,0,0,0);
+
+    historico.forEach((p, index) => {
+        const fim = new Date(p.fim);
+        fim.setHours(0,0,0,0);
+
+        // ATUALIZA STATUS AUTOMÁTICO
+        if (p.status === "Ativa" && fim < hoje) {
+            p.status = "Cumprida";
+            salvar();
+        }
+
+        // HISTÓRICO (sempre)
+        historicoBody.innerHTML += `
+
+            <tr>
+                <td>${p.jogador}</td>
+                <td>${p.tipo}</td>
+                <td>${p.inicio} → ${p.fim}</td>
+                <td>${p.pontos}</td>
+                <td>
+                    <span class="badge ${
+                        p.status === "Ativa"
+                            ? "bg-warning text-dark"
+                            : "bg-success"
+                    }">
+                        ${p.status}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="excluir(${index})">
+                        Excluir
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        // PENALIDADES ATIVAS (somente se ainda estiver ativa)
+        if (p.status === "Ativa") {
+            ativasBody.innerHTML += `
+                <tr>
+                    <td>${p.jogador}</td>
+                    <td>${p.tipo}</td>
+                    <td>${p.inicio}</td>
+                    <td>${p.fim}</td>
+                    <td>${p.pontos}</td>
+                    <td>
+                        <button class="btn btn-success btn-sm" onclick="finalizar(${index})">
+                            Finalizar
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }
+    });
+}
+
+function adicionarPenalidade() {
+    const jogador = jogadorInput.value;
+    const tipo = tipoInput.value;
+    const dias = Number(diasInput.value);
+    const inicio = inicioInput.value;
+    const pontos = pontosInput.value;
+
+    if (!jogador || !tipo || !dias || !inicio || pontos === "") {
+        alert("Preencha todos os campos");
+        return;
+    }
+
+    const fim = new Date(inicio);
+    fim.setDate(fim.getDate() + dias);
+
+    historico.push({
+        jogador,
+        tipo,
+        inicio,
+        fim: fim.toISOString().split("T")[0],
+        pontos,
+        status: "Ativa"
+    });
+
+    salvar();
+    render();
+
+    jogadorInput.value = "";
+    tipoInput.value = "";
+    diasInput.value = "";
+    inicioInput.value = "";
+    pontosInput.value = "";
+}
+
+function finalizar(index) {
+    historico[index].status = "Cumprida";
+    salvar();
+    render();
+}
+
+function excluir(index) {
+    if (confirm("Excluir penalidade?")) {
+        historico.splice(index, 1);
+        salvar();
+        render();
+    }
+}
+
+const jogadorInput = document.getElementById("jogador");
+const tipoInput = document.getElementById("tipo");
+const diasInput = document.getElementById("dias");
+const inicioInput = document.getElementById("inicio");
+const pontosInput = document.getElementById("pontos");
+
+render();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
