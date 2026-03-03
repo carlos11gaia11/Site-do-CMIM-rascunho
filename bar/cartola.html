@@ -6,7 +6,6 @@
 <title>CMIM Fantasy</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 :root {
@@ -30,7 +29,7 @@ body {
 
 .btn-cmim {
     background: var(--cmim-yellow);
-    color: black;
+    color: var(--cmim-black);
     font-weight: bold;
     border: none;
 }
@@ -39,15 +38,50 @@ body {
     background: #ffea70;
 }
 
-.card-dashboard {
+.hud-card {
     background: white;
+    border-left: 6px solid var(--cmim-yellow);
     border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
     padding: 20px;
 }
 
-.arrow-up { color: green; font-weight: bold; }
-.arrow-down { color: red; font-weight: bold; }
+.player-card {
+    background: white;
+    border-radius: 15px;
+    border: 2px solid #f1f1f1;
+    padding: 20px;
+    transition: 0.3s;
+    text-align: center;
+    height: 100%;
+}
+
+.player-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--cmim-yellow);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+.player-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid var(--cmim-yellow);
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.position-slot {
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    min-height: 170px;
+}
+
+.position-slot h6 {
+    font-weight: bold;
+}
 
 .table thead {
     background: var(--cmim-black);
@@ -62,8 +96,7 @@ body {
   <div class="ms-auto">
     <button class="btn btn-cmim me-2" onclick="showTab('time')">Meu Time</button>
     <button class="btn btn-cmim me-2" onclick="showTab('mercado')">Mercado</button>
-    <button class="btn btn-cmim me-2" onclick="showTab('torneio')">Torneio</button>
-    <button class="btn btn-cmim" onclick="showTab('valorizacao')">Valorização</button>
+    <button class="btn btn-cmim" onclick="showTab('torneio')">Torneio</button>
   </div>
 </nav>
 
@@ -71,180 +104,167 @@ body {
 
 <!-- MEU TIME -->
 <div id="time">
-<h3>Meu Time (mantido)</h3>
+
+<div class="hud-card mb-4 d-flex justify-content-between">
+    <div>
+        <h3 id="teamName">Favela Team</h3>
+        <h5>Pontos: <span id="teamPoints">0</span></h5>
+    </div>
+    <div>
+        <h5>💰 <span id="teamMoney">500</span>M</h5>
+    </div>
+</div>
+
+<div class="row g-4" id="teamSlots">
+</div>
+
 </div>
 
 <!-- MERCADO -->
 <div id="mercado" style="display:none">
-<h3>Mercado (mantido)</h3>
+
+<h3 class="mb-4">Mercado de Jogadores</h3>
+<div class="row g-4" id="marketPlayers"></div>
+
 </div>
 
 <!-- TORNEIO -->
 <div id="torneio" style="display:none">
-<h3>Torneio (mantido)</h3>
-</div>
 
-<!-- VALORIZAÇÃO -->
-<div id="valorizacao" style="display:none">
+<h3>Ranking Geral</h3>
 
-<div class="row mb-4">
-
-<div class="col-md-4">
-<div class="card-dashboard">
-<label class="form-label fw-bold">Selecionar Jogador</label>
-<select id="playerSelect" class="form-select"></select>
-
-<div class="mt-3">
-<h5 id="currentValue"></h5>
-<h6 id="variation"></h6>
-</div>
-</div>
-</div>
-
-<div class="col-md-4">
-<div class="card-dashboard text-center">
-<h6>Valorização Total</h6>
-<h3 id="totalValorization"></h3>
-</div>
-</div>
-
-<div class="col-md-4">
-<div class="card-dashboard text-center">
-<h6>Última Pontuação</h6>
-<h3 id="lastScore"></h3>
-</div>
-</div>
-
-</div>
-
-<div class="row">
-
-<div class="col-lg-8 mb-4">
-<div class="card-dashboard">
-<h5>Evolução de Valor</h5>
-<canvas id="valorChart"></canvas>
-</div>
-</div>
-
-<div class="col-lg-4 mb-4">
-<div class="card-dashboard">
-<h5>Ranking de Valorização</h5>
-<table class="table table-sm mt-3">
+<table class="table mt-3">
 <thead>
 <tr>
 <th>#</th>
-<th>Jogador</th>
-<th>Valorização</th>
+<th>Time</th>
+<th>Pontos</th>
+<th>Valor</th>
+<th>Verba</th>
 </tr>
 </thead>
-<tbody id="rankingBody"></tbody>
+<tbody id="rankingTable"></tbody>
 </table>
-</div>
-</div>
-
-</div>
 
 </div>
 
 </div>
 
 <script>
+
+const positions = ["TOP","JG","MID","ADC","SUP"];
+let team = {};
+let teamMoney = 500;
+let teamPoints = 0;
+
+function renderTeam() {
+    const container = document.getElementById("teamSlots");
+    container.innerHTML = "";
+
+    positions.forEach(pos => {
+        const player = team[pos];
+        container.innerHTML += `
+        <div class="col-md-4 col-lg-2">
+            <div class="position-slot">
+                <h6>${pos}</h6>
+                ${player ? `
+                    <img src="${player.img}" class="player-img">
+                    <div>${player.name}</div>
+                    <small>${player.points} pts</small>
+                ` : `<p>Vazio</p>`}
+            </div>
+        </div>`;
+    });
+
+    document.getElementById("teamMoney").innerText = teamMoney;
+    document.getElementById("teamPoints").innerText = teamPoints;
+}
+
+function addToTeam(player) {
+    if(team[player.position]) {
+        alert("Você já tem jogador nessa posição!");
+        return;
+    }
+
+    if(teamMoney < player.price) {
+        alert("Dinheiro insuficiente!");
+        return;
+    }
+
+    team[player.position] = player;
+    teamMoney -= player.price;
+    teamPoints += player.points;
+
+    renderTeam();
+}
+
+function generatePlayers() {
+    const container = document.getElementById("marketPlayers");
+    container.innerHTML = "";
+
+    for(let i=1;i<=50;i++){
+        let position = positions[i%5];
+        let price = Math.floor(Math.random()*120)+50;
+        let points = Math.floor(Math.random()*30)+5;
+
+        let player = {
+            name: "Player"+i,
+            position,
+            price,
+            points,
+            img: "https://randomuser.me/api/portraits/men/"+(i%90)+".jpg"
+        };
+
+        container.innerHTML += `
+        <div class="col-md-4 col-lg-3">
+            <div class="player-card">
+                <img src="${player.img}" class="player-img">
+                <h6>${player.name}</h6>
+                <small>${position}</small>
+                <p>${points} pts</p>
+                <h6>💰 ${price}M</h6>
+                <button class="btn btn-cmim w-100" onclick='addToTeam(${JSON.stringify(player)})'>Contratar</button>
+            </div>
+        </div>`;
+    }
+}
+
+function renderRanking() {
+    const ranking = [
+        {name:"Rocket Team", points:480, value:650, money:200},
+        {name:"DosNossos", points:450, value:600, money:180},
+        {name:"Favela Team", points:teamPoints, value:500-teamMoney+500, money:teamMoney}
+    ];
+
+    ranking.sort((a,b)=>b.points-a.points);
+
+    let table = document.getElementById("rankingTable");
+    table.innerHTML="";
+
+    ranking.forEach((team,i)=>{
+        table.innerHTML += `
+        <tr>
+            <td>${i+1}</td>
+            <td>${team.name}</td>
+            <td>${team.points}</td>
+            <td>${team.value}M</td>
+            <td>${team.money}M</td>
+        </tr>`;
+    });
+}
+
 function showTab(tab) {
-    document.getElementById("time").style.display = "none";
-    document.getElementById("mercado").style.display = "none";
-    document.getElementById("torneio").style.display = "none";
-    document.getElementById("valorizacao").style.display = "none";
-    document.getElementById(tab).style.display = "block";
+    document.getElementById("time").style.display="none";
+    document.getElementById("mercado").style.display="none";
+    document.getElementById("torneio").style.display="none";
+    document.getElementById(tab).style.display="block";
+
+    if(tab==="torneio") renderRanking();
 }
 
-const players = [
-{ name:"ShadowFury", scores:[18,22,19,24,20], initialValue:100 },
-{ name:"IronClaw", scores:[15,16,14,18,17], initialValue:90 },
-{ name:"NightHunter", scores:[12,14,15,13,16], initialValue:70 },
-{ name:"CrystalShot", scores:[20,21,23,19,22], initialValue:110 }
-];
+generatePlayers();
+renderTeam();
 
-function calculateValues(player){
-let values=[player.initialValue];
-for(let i=1;i<player.scores.length;i++){
-let variation=(player.scores[i]-player.scores[i-1])*2;
-values.push(values[i-1]+variation);
-}
-return values;
-}
-
-players.forEach(p=>{
-p.values=calculateValues(p);
-p.valorization=p.values[p.values.length-1]-p.initialValue;
-});
-
-const select=document.getElementById("playerSelect");
-players.forEach((p,i)=>{
-let option=document.createElement("option");
-option.value=i;
-option.text=p.name;
-select.appendChild(option);
-});
-
-let chart;
-
-function updateDashboard(index){
-let player=players[index];
-
-document.getElementById("currentValue").innerText=
-"Valor Atual: "+player.values[player.values.length-1]+"M";
-
-let variation=player.valorization;
-let arrow=variation>=0?
-"<span class='arrow-up'>▲ +"+variation+"M</span>":
-"<span class='arrow-down'>▼ "+variation+"M</span>";
-
-document.getElementById("variation").innerHTML=arrow;
-document.getElementById("totalValorization").innerText=variation+"M";
-document.getElementById("lastScore").innerText=
-player.scores[player.scores.length-1]+" pts";
-
-if(chart) chart.destroy();
-
-chart=new Chart(document.getElementById("valorChart"),{
-type:"line",
-data:{
-labels:["R1","R2","R3","R4","R5"],
-datasets:[{
-label:"Valor",
-data:player.values,
-borderColor:"#FFD600",
-backgroundColor:"rgba(255,214,0,0.3)",
-tension:0.4,
-fill:true
-}]
-},
-options:{
-plugins:{legend:{display:false}}
-}
-});
-}
-
-function updateRanking(){
-let sorted=[...players].sort((a,b)=>b.valorization-a.valorization);
-let body=document.getElementById("rankingBody");
-body.innerHTML="";
-sorted.forEach((p,i)=>{
-body.innerHTML+=`
-<tr>
-<td>${i+1}</td>
-<td>${p.name}</td>
-<td>${p.valorization}M</td>
-</tr>`;
-});
-}
-
-select.addEventListener("change",()=>{
-updateDashboard(select.value);
-});
-
-updateRanking();
-updateDashboard(0);
 </script>
 
 </body>
