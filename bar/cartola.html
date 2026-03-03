@@ -6,12 +6,12 @@
 <title>CMIM Fantasy</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 :root {
     --cmim-yellow: #FFD600;
     --cmim-black: #000000;
-    --cmim-dark: #111111;
 }
 
 body {
@@ -30,7 +30,7 @@ body {
 
 .btn-cmim {
     background: var(--cmim-yellow);
-    color: var(--cmim-black);
+    color: black;
     font-weight: bold;
     border: none;
 }
@@ -39,58 +39,19 @@ body {
     background: #ffea70;
 }
 
-.hud-card {
+.card-dashboard {
     background: white;
-    border-left: 6px solid var(--cmim-yellow);
     border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     padding: 20px;
 }
 
-.player-card {
-    background: white;
-    border-radius: 15px;
-    border: 2px solid #f1f1f1;
-    padding: 20px;
-    transition: 0.3s;
-    text-align: center;
-}
-
-.player-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--cmim-yellow);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-}
-
-.player-img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid var(--cmim-yellow);
-    object-fit: cover;
-    margin-bottom: 10px;
-}
-
-.tier {
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 20px;
-    display: inline-block;
-    margin-bottom: 8px;
-}
-
-.tier-S { background: black; color: var(--cmim-yellow); }
-.tier-A { background: var(--cmim-yellow); color: black; }
-.tier-B { background: #ddd; color: black; }
-.tier-C { background: #f5f5f5; color: black; }
+.arrow-up { color: green; font-weight: bold; }
+.arrow-down { color: red; font-weight: bold; }
 
 .table thead {
     background: var(--cmim-black);
     color: var(--cmim-yellow);
-}
-
-.ranking-row:hover {
-    background: #fff9db;
 }
 </style>
 </head>
@@ -101,7 +62,8 @@ body {
   <div class="ms-auto">
     <button class="btn btn-cmim me-2" onclick="showTab('time')">Meu Time</button>
     <button class="btn btn-cmim me-2" onclick="showTab('mercado')">Mercado</button>
-    <button class="btn btn-cmim" onclick="showTab('torneio')">Torneio</button>
+    <button class="btn btn-cmim me-2" onclick="showTab('torneio')">Torneio</button>
+    <button class="btn btn-cmim" onclick="showTab('valorizacao')">Valorização</button>
   </div>
 </nav>
 
@@ -109,141 +71,78 @@ body {
 
 <!-- MEU TIME -->
 <div id="time">
-
-<div class="hud-card mb-4 d-flex justify-content-between align-items-center">
-    <div>
-        <h3>Favela Team</h3>
-        <p><strong>125.40 pts</strong></p>
-    </div>
-    <div>
-        <h5>💰 320M</h5>
-    </div>
-</div>
-
-<h4 class="mb-3">Escalação</h4>
-
-<div class="row g-4">
-
-<!-- TOP -->
-<div class="col-md-4 col-lg-2">
-<div class="player-card">
-<img src="https://randomuser.me/api/portraits/men/11.jpg" class="player-img">
-<div class="tier tier-S">Tier S</div>
-<h6>Thekito</h6>
-<small>TOP</small>
-<p>Média: 20.5</p>
-<strong>18.4 pts</strong>
-</div>
-</div>
-
-<!-- JG -->
-<div class="col-md-4 col-lg-2">
-<div class="player-card">
-<img src="https://randomuser.me/api/portraits/men/22.jpg" class="player-img">
-<div class="tier tier-A">Tier A</div>
-<h6>CaçadorX</h6>
-<small>JG</small>
-<p>Média: 17.3</p>
-<strong>15.2 pts</strong>
-</div>
-</div>
-
-<!-- MID -->
-<div class="col-md-4 col-lg-2">
-<div class="player-card">
-<img src="https://randomuser.me/api/portraits/men/33.jpg" class="player-img">
-<div class="tier tier-S">Tier S</div>
-<h6>DemonKing</h6>
-<small>MID</small>
-<p>Média: 21.7</p>
-<strong>21.1 pts</strong>
-</div>
-</div>
-
-<!-- ADC -->
-<div class="col-md-4 col-lg-2">
-<div class="player-card">
-<img src="https://randomuser.me/api/portraits/men/44.jpg" class="player-img">
-<div class="tier tier-A">Tier A</div>
-<h6>GuidO</h6>
-<small>ADC</small>
-<p>Média: 18.9</p>
-<strong>19.7 pts</strong>
-</div>
-</div>
-
-<!-- SUP -->
-<div class="col-md-4 col-lg-2">
-<div class="player-card">
-<img src="https://randomuser.me/api/portraits/women/55.jpg" class="player-img">
-<div class="tier tier-B">Tier B</div>
-<h6>StarGirl</h6>
-<small>SUP</small>
-<p>Média: 14.1</p>
-<strong>13.4 pts</strong>
-</div>
-</div>
-
-</div>
+<h3>Meu Time (mantido)</h3>
 </div>
 
 <!-- MERCADO -->
 <div id="mercado" style="display:none">
-
-<h3 class="mb-4">Mercado</h3>
-
-<div class="row g-4">
-
-<div class="col-md-4 col-lg-3">
-<div class="player-card">
-<img src="https://randomuser.me/api/portraits/men/60.jpg" class="player-img">
-<div class="tier tier-S">Tier S</div>
-<h6>ShadowFury</h6>
-<small>MID</small>
-<p>Média: 22.4</p>
-<p>Última: 24.0</p>
-<h6>💰 130M</h6>
-<button class="btn btn-cmim w-100">Contratar</button>
-</div>
-</div>
-
-<div class="col-md-4 col-lg-3">
-<div class="player-card">
-<img src="https://randomuser.me/api/portraits/men/61.jpg" class="player-img">
-<div class="tier tier-A">Tier A</div>
-<h6>IronClaw</h6>
-<small>TOP</small>
-<p>Média: 18.2</p>
-<p>Última: 17.1</p>
-<h6>💰 100M</h6>
-<button class="btn btn-cmim w-100">Contratar</button>
-</div>
-</div>
-
-</div>
+<h3>Mercado (mantido)</h3>
 </div>
 
 <!-- TORNEIO -->
 <div id="torneio" style="display:none">
+<h3>Torneio (mantido)</h3>
+</div>
 
-<h3>Ranking Geral</h3>
+<!-- VALORIZAÇÃO -->
+<div id="valorizacao" style="display:none">
 
-<table class="table mt-3">
+<div class="row mb-4">
+
+<div class="col-md-4">
+<div class="card-dashboard">
+<label class="form-label fw-bold">Selecionar Jogador</label>
+<select id="playerSelect" class="form-select"></select>
+
+<div class="mt-3">
+<h5 id="currentValue"></h5>
+<h6 id="variation"></h6>
+</div>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-dashboard text-center">
+<h6>Valorização Total</h6>
+<h3 id="totalValorization"></h3>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card-dashboard text-center">
+<h6>Última Pontuação</h6>
+<h3 id="lastScore"></h3>
+</div>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-lg-8 mb-4">
+<div class="card-dashboard">
+<h5>Evolução de Valor</h5>
+<canvas id="valorChart"></canvas>
+</div>
+</div>
+
+<div class="col-lg-4 mb-4">
+<div class="card-dashboard">
+<h5>Ranking de Valorização</h5>
+<table class="table table-sm mt-3">
 <thead>
 <tr>
 <th>#</th>
-<th>Time</th>
-<th>Pontos</th>
-<th>Valor</th>
-<th>Verba</th>
+<th>Jogador</th>
+<th>Valorização</th>
 </tr>
 </thead>
-<tbody>
-<tr class="ranking-row"><td>1</td><td>Rocket Team</td><td>480</td><td>600M</td><td>150M</td></tr>
-<tr class="ranking-row"><td>2</td><td>DosNossos</td><td>455</td><td>580M</td><td>200M</td></tr>
-<tr class="ranking-row"><td>3</td><td>Favela Team</td><td>420</td><td>520M</td><td>320M</td></tr>
-</tbody>
+<tbody id="rankingBody"></tbody>
 </table>
+</div>
+</div>
+
+</div>
 
 </div>
 
@@ -254,8 +153,98 @@ function showTab(tab) {
     document.getElementById("time").style.display = "none";
     document.getElementById("mercado").style.display = "none";
     document.getElementById("torneio").style.display = "none";
+    document.getElementById("valorizacao").style.display = "none";
     document.getElementById(tab).style.display = "block";
 }
+
+const players = [
+{ name:"ShadowFury", scores:[18,22,19,24,20], initialValue:100 },
+{ name:"IronClaw", scores:[15,16,14,18,17], initialValue:90 },
+{ name:"NightHunter", scores:[12,14,15,13,16], initialValue:70 },
+{ name:"CrystalShot", scores:[20,21,23,19,22], initialValue:110 }
+];
+
+function calculateValues(player){
+let values=[player.initialValue];
+for(let i=1;i<player.scores.length;i++){
+let variation=(player.scores[i]-player.scores[i-1])*2;
+values.push(values[i-1]+variation);
+}
+return values;
+}
+
+players.forEach(p=>{
+p.values=calculateValues(p);
+p.valorization=p.values[p.values.length-1]-p.initialValue;
+});
+
+const select=document.getElementById("playerSelect");
+players.forEach((p,i)=>{
+let option=document.createElement("option");
+option.value=i;
+option.text=p.name;
+select.appendChild(option);
+});
+
+let chart;
+
+function updateDashboard(index){
+let player=players[index];
+
+document.getElementById("currentValue").innerText=
+"Valor Atual: "+player.values[player.values.length-1]+"M";
+
+let variation=player.valorization;
+let arrow=variation>=0?
+"<span class='arrow-up'>▲ +"+variation+"M</span>":
+"<span class='arrow-down'>▼ "+variation+"M</span>";
+
+document.getElementById("variation").innerHTML=arrow;
+document.getElementById("totalValorization").innerText=variation+"M";
+document.getElementById("lastScore").innerText=
+player.scores[player.scores.length-1]+" pts";
+
+if(chart) chart.destroy();
+
+chart=new Chart(document.getElementById("valorChart"),{
+type:"line",
+data:{
+labels:["R1","R2","R3","R4","R5"],
+datasets:[{
+label:"Valor",
+data:player.values,
+borderColor:"#FFD600",
+backgroundColor:"rgba(255,214,0,0.3)",
+tension:0.4,
+fill:true
+}]
+},
+options:{
+plugins:{legend:{display:false}}
+}
+});
+}
+
+function updateRanking(){
+let sorted=[...players].sort((a,b)=>b.valorization-a.valorization);
+let body=document.getElementById("rankingBody");
+body.innerHTML="";
+sorted.forEach((p,i)=>{
+body.innerHTML+=`
+<tr>
+<td>${i+1}</td>
+<td>${p.name}</td>
+<td>${p.valorization}M</td>
+</tr>`;
+});
+}
+
+select.addEventListener("change",()=>{
+updateDashboard(select.value);
+});
+
+updateRanking();
+updateDashboard(0);
 </script>
 
 </body>
