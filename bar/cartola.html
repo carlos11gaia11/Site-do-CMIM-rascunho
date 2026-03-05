@@ -3,166 +3,166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CMIM Fantasy Pro</title>
+<title>CMIM Cartola Pro</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 :root{
---cmim-yellow:#FFD600;
---cmim-black:#000;
+--primary:#FFD600;
+--dark:#0f0f0f;
+--card:#1a1a1a;
+--success:#00c853;
+--danger:#ff5252;
 }
 
 body{
-background:white;
+background:var(--dark);
+color:white;
 font-family:'Segoe UI',sans-serif;
 }
 
 .navbar{
-background:var(--cmim-black);
+background:#000;
+box-shadow:0 5px 20px rgba(0,0,0,0.5);
 }
 
 .navbar-brand{
-color:var(--cmim-yellow)!important;
+color:var(--primary)!important;
 font-weight:bold;
 }
 
-.btn-cmim{
-background:var(--cmim-yellow);
+.btn-primary-custom{
+background:var(--primary);
 color:black;
 font-weight:bold;
 border:none;
 }
 
-.btn-cmim:hover{
+.btn-primary-custom:hover{
 background:#ffe95a;
 }
 
 .card-custom{
-border-radius:15px;
-box-shadow:0 5px 20px rgba(0,0,0,0.08);
+background:var(--card);
+border-radius:18px;
 padding:20px;
-background:white;
+box-shadow:0 5px 25px rgba(0,0,0,0.4);
 }
 
 .player-img{
-width:65px;
-height:65px;
+width:60px;
+height:60px;
 border-radius:50%;
-border:3px solid var(--cmim-yellow);
+border:3px solid var(--primary);
 object-fit:cover;
 }
 
-.arrow-up{color:green;font-weight:bold;}
-.arrow-down{color:red;font-weight:bold;}
-
 .slot{
-border:2px dashed #ddd;
-border-radius:12px;
+background:#111;
+border-radius:15px;
 padding:15px;
-text-align:center;
 min-height:180px;
+text-align:center;
+transition:0.3s;
 }
 
+.slot:hover{
+background:#1f1f1f;
+}
+
+.valor-up{color:var(--success);font-weight:bold;}
+.valor-down{color:var(--danger);font-weight:bold;}
+
+.market-card{
+transition:0.3s;
+cursor:pointer;
+}
+
+.market-card:hover{
+transform:translateY(-5px);
+}
+
+.toast-container{
+position:fixed;
+top:20px;
+right:20px;
+z-index:9999;
+}
 </style>
 </head>
 <body>
 
-<nav class="navbar px-4">
-<span class="navbar-brand fs-4">CMIM Fantasy Pro</span>
+<nav class="navbar px-4 py-3">
+<span class="navbar-brand fs-4">CMIM CARTOLA PRO</span>
 <div class="ms-auto">
-<button class="btn btn-cmim me-2" onclick="showTab('time')">Meu Time</button>
-<button class="btn btn-cmim me-2" onclick="showTab('mercado')">Mercado</button>
-<button class="btn btn-cmim me-2" onclick="showTab('torneio')">Torneio</button>
+<button class="btn btn-primary-custom me-2" onclick="showTab('time')">Meu Time</button>
+<button class="btn btn-primary-custom me-2" onclick="showTab('mercado')">Mercado</button>
+<button class="btn btn-primary-custom" onclick="showTab('torneio')">Ranking</button>
 </div>
 </nav>
 
 <div class="container mt-4">
 
-<!-- MEU TIME -->
 <div id="time">
 
-<div class="card-custom mb-4 d-flex justify-content-between">
+<div class="card-custom mb-4 d-flex justify-content-between align-items-center">
 <div>
-<h3>Team</h3>
-<h5>Pontos: <span id="teamPoints">0</span></h5>
+<h4>Pontos Totais: <span id="teamPoints">0</span></h4>
+<small>Rodada: <span id="round">0</span></small>
 </div>
-<div>
+<div class="text-end">
 <h5>💰 <span id="teamMoney">500</span>M</h5>
-<button class="btn btn-cmim mt-2" onclick="simulateRound()">Simular Rodada</button>
+<h6>Patrimônio: <span id="teamValue">500</span>M</h6>
+<button class="btn btn-primary-custom mt-2" onclick="simulateRound()">Simular Rodada</button>
 </div>
 </div>
 
-<h4>Escalação</h4>
+<h5 class="mb-3">Escalação</h5>
 <div class="row g-4 mb-5" id="teamSlots"></div>
 
-<h4>📊 Estatísticas do Time</h4>
-<div class="row g-4">
-
-<div class="col-lg-6">
-<div class="card-custom">
-<h6>Evolução Patrimonial</h6>
-<canvas id="valueChart"></canvas>
-</div>
 </div>
 
-<div class="col-lg-6">
-<div class="card-custom">
-<h6>Pontos por Rodada</h6>
-<canvas id="pointsChart"></canvas>
-</div>
-</div>
-
-<div class="col-lg-6">
-<div class="card-custom">
-<h6>Pontos por Posição</h6>
-<canvas id="positionChart"></canvas>
-</div>
-</div>
-
-<div class="col-lg-6">
-<div class="card-custom">
-<h6>Ranking de Valorização</h6>
-<ul id="valorizationRanking"></ul>
-</div>
-</div>
-
-<div class="col-12">
-<div class="card-custom">
-<h6>📈 Estatísticas Individuais</h6>
-<select id="playerSelect" class="form-select mb-3"></select>
-<canvas id="playerChart"></canvas>
-</div>
-</div>
-
-</div>
-</div>
-
-<!-- MERCADO -->
 <div id="mercado" style="display:none">
-<h3>Mercado</h3>
-<div class="row g-4" id="marketPlayers"></div>
+
+<div class="d-flex justify-content-between mb-3">
+<h4>Mercado</h4>
+<select class="form-select w-25" onchange="filterMarket(this.value)">
+<option value="ALL">Todas posições</option>
+<option value="TOP">TOP</option>
+<option value="JG">JG</option>
+<option value="MID">MID</option>
+<option value="ADC">ADC</option>
+<option value="SUP">SUP</option>
+</select>
 </div>
 
-<!-- TORNEIO -->
+<div class="row g-4" id="marketPlayers"></div>
+
+</div>
+
 <div id="torneio" style="display:none">
-<h3>Ranking</h3>
-<table class="table mt-3">
+<h4>Ranking Geral</h4>
+<div class="card-custom mt-3">
+<table class="table table-dark table-striped">
 <thead>
 <tr>
 <th>#</th>
 <th>Time</th>
 <th>Pontos</th>
-<th>Valor</th>
-<th>Verba</th>
+<th>Patrimônio</th>
+<th>Saldo</th>
 </tr>
 </thead>
 <tbody id="rankingTable"></tbody>
 </table>
 </div>
+</div>
 
 </div>
+
+<div class="toast-container"></div>
 
 <script>
 
@@ -171,29 +171,32 @@ let team={};
 let teamMoney=500;
 let teamPoints=0;
 let round=0;
-let teamValueHistory=[500];
-let teamPointsHistory=[];
 let players=[];
-let playerChart,valueChart,pointsChart,positionChart;
+
+function showToast(msg){
+const toast=document.createElement("div");
+toast.className="toast align-items-center text-bg-warning show mb-2";
+toast.innerHTML=`<div class="d-flex"><div class="toast-body">${msg}</div></div>`;
+document.querySelector(".toast-container").appendChild(toast);
+setTimeout(()=>toast.remove(),3000);
+}
 
 function showTab(tab){
-document.getElementById("time").style.display="none";
-document.getElementById("mercado").style.display="none";
-document.getElementById("torneio").style.display="none";
+["time","mercado","torneio"].forEach(t=>document.getElementById(t).style.display="none");
 document.getElementById(tab).style.display="block";
 renderRanking();
 }
 
 function generatePlayers(){
 for(let i=1;i<=50;i++){
-let position=positions[i%5];
-let price=Math.floor(Math.random()*100)+50;
-let avg=Math.floor(Math.random()*20)+10;
+let pos=positions[i%5];
+let price=Math.floor(Math.random()*60)+80;
+let avg=Math.floor(Math.random()*15)+10;
 
 players.push({
 id:i,
 name:"Player"+i,
-position,
+position:pos,
 price,
 value:price,
 avg,
@@ -201,40 +204,55 @@ history:[],
 img:"https://randomuser.me/api/portraits/men/"+(i%90)+".jpg"
 });
 }
-renderMarket();
+renderMarket(players);
 }
 
-function renderMarket(){
+function renderMarket(list){
 let container=document.getElementById("marketPlayers");
 container.innerHTML="";
-players.forEach(p=>{
+list.forEach(p=>{
 container.innerHTML+=`
 <div class="col-md-4 col-lg-3">
-<div class="card-custom text-center">
+<div class="card-custom market-card text-center">
 <img src="${p.img}" class="player-img mb-2">
 <h6>${p.name}</h6>
 <small>${p.position}</small>
 <p>Média: ${p.avg}</p>
-<p>Valor: ${p.value}M</p>
-<button class="btn btn-cmim w-100" onclick="addToTeam(${p.id})">Contratar</button>
+<p>${p.value}M</p>
+<button class="btn btn-primary-custom w-100" onclick="addToTeam(${p.id})">Contratar</button>
 </div>
 </div>`;
 });
 }
 
+function filterMarket(pos){
+if(pos==="ALL"){renderMarket(players);return;}
+renderMarket(players.filter(p=>p.position===pos));
+}
+
 function addToTeam(id){
 let p=players.find(x=>x.id===id);
-if(team[p.position]){alert("Já tem jogador nessa posição");return;}
-if(teamMoney<p.value){alert("Sem dinheiro");return;}
+if(team[p.position]){showToast("Já existe jogador nessa posição");return;}
+if(teamMoney<p.value){showToast("Saldo insuficiente");return;}
+
 team[p.position]=p;
 teamMoney-=p.value;
+showToast("Jogador contratado!");
 renderTeam();
-updateSelect();
+}
+
+function removePlayer(pos){
+let p=team[pos];
+teamMoney+=p.value;
+delete team[pos];
+showToast("Jogador vendido!");
+renderTeam();
 }
 
 function renderTeam(){
 let container=document.getElementById("teamSlots");
 container.innerHTML="";
+
 positions.forEach(pos=>{
 let p=team[pos];
 container.innerHTML+=`
@@ -244,45 +262,52 @@ container.innerHTML+=`
 ${p?`
 <img src="${p.img}" class="player-img mb-2">
 <div>${p.name}</div>
-<div>${p.value}M</div>
+<div class="${p.value>p.price?'valor-up':'valor-down'}">${p.value}M</div>
+<button class="btn btn-sm btn-danger mt-2" onclick="removePlayer('${pos}')">Vender</button>
 `:`<p>Vazio</p>`}
 </div>
 </div>`;
 });
+
 document.getElementById("teamMoney").innerText=teamMoney;
 document.getElementById("teamPoints").innerText=teamPoints;
+document.getElementById("teamValue").innerText=teamMoney+Object.values(team).reduce((a,b)=>a+b.value,0);
+document.getElementById("round").innerText=round;
 }
 
 function simulateRound(){
+if(Object.keys(team).length<5){showToast("Escale o time completo!");return;}
+
 round++;
-let totalRoundPoints=0;
+let roundPoints=0;
 
 Object.values(team).forEach(p=>{
-let pts=Math.floor(Math.random()*25)+5;
+let pts=Math.floor(Math.random()*20)+5;
 p.history.push(pts);
-totalRoundPoints+=pts;
+roundPoints+=pts;
 
-let old=p.value;
-if(pts>p.avg){p.value+=5;}else{p.value-=5;}
+let variation=Math.floor(Math.random()*10)-5;
+p.value=Math.max(1,p.value+variation);
 });
 
-teamPoints+=totalRoundPoints;
-teamPointsHistory.push(totalRoundPoints);
-teamValueHistory.push(teamValueHistory[teamValueHistory.length-1]+Math.floor(Math.random()*20));
-updateCharts();
+teamPoints+=roundPoints;
+showToast("Rodada finalizada: "+roundPoints+" pontos!");
 renderTeam();
 renderRanking();
-renderValorizationRanking();
 }
 
 function renderRanking(){
 let ranking=[
-{name:"Rocket Team",points:480,value:650,money:200},
-{name:"DosNossos",points:450,value:600,money:180},
-{name:"Favela Team",points:teamPoints,value:teamValueHistory.slice(-1)[0],money:teamMoney}
+{name:"CMIM Legends",points:620,value:700,money:120},
+{name:"Insalubre FC",points:580,value:680,money:150},
+{name:"Seu Time",points:teamPoints,value:teamMoney+Object.values(team).reduce((a,b)=>a+b.value,0),money:teamMoney}
 ];
+
 ranking.sort((a,b)=>b.points-a.points);
+
 let table=document.getElementById("rankingTable");
+if(!table)return;
+
 table.innerHTML="";
 ranking.forEach((t,i)=>{
 table.innerHTML+=`
@@ -296,86 +321,9 @@ table.innerHTML+=`
 });
 }
 
-function renderValorizationRanking(){
-let list=document.getElementById("valorizationRanking");
-list.innerHTML="";
-let sorted=[...Object.values(team)].sort((a,b)=>b.value-a.value);
-sorted.forEach(p=>{
-let arrow=p.value>p.price?"↑":"↓";
-let cls=p.value>p.price?"arrow-up":"arrow-down";
-list.innerHTML+=`<li>${p.name} <span class="${cls}">${arrow}</span> (${p.value}M)</li>`;
-});
-}
-
-function updateSelect(){
-let select=document.getElementById("playerSelect");
-select.innerHTML="";
-Object.values(team).forEach(p=>{
-select.innerHTML+=`<option value="${p.id}">${p.name}</option>`;
-});
-select.onchange=()=>renderPlayerChart();
-renderPlayerChart();
-}
-
-function renderPlayerChart(){
-let id=document.getElementById("playerSelect").value;
-if(!id)return;
-let p=players.find(x=>x.id==id);
-if(playerChart)playerChart.destroy();
-playerChart=new Chart(document.getElementById("playerChart"),{
-type:"line",
-data:{
-labels:p.history.map((_,i)=>"R"+(i+1)),
-datasets:[{
-label:"Pontos",
-data:p.history,
-borderColor:"#FFD600",
-backgroundColor:"rgba(255,214,0,0.2)",
-tension:0.4
-}]
-}
-});
-}
-
-function updateCharts(){
-if(valueChart)valueChart.destroy();
-if(pointsChart)pointsChart.destroy();
-if(positionChart)positionChart.destroy();
-
-valueChart=new Chart(document.getElementById("valueChart"),{
-type:"line",
-data:{
-labels:teamValueHistory.map((_,i)=>"R"+i),
-datasets:[{label:"Patrimônio",data:teamValueHistory,borderColor:"#FFD600"}]
-}
-});
-
-pointsChart=new Chart(document.getElementById("pointsChart"),{
-type:"bar",
-data:{
-labels:teamPointsHistory.map((_,i)=>"R"+(i+1)),
-datasets:[{label:"Pontos",data:teamPointsHistory,backgroundColor:"#000"}]
-}
-});
-
-let posPoints=positions.map(pos=>{
-let p=team[pos];
-return p?p.history.reduce((a,b)=>a+b,0):0;
-});
-
-positionChart=new Chart(document.getElementById("positionChart"),{
-type:"doughnut",
-data:{
-labels:positions,
-datasets:[{data:posPoints,backgroundColor:["#FFD600","#000","#ccc","#333","#999"]}]
-}
-});
-}
-
 generatePlayers();
 renderTeam();
 
 </script>
 </body>
 </html>
-
