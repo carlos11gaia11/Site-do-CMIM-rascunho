@@ -11,39 +11,46 @@
 <style>
 :root{
 --primary:#ffc107;
---dark:#0e0e0e;
---card:#161616;
---glass:rgba(255,255,255,0.05);
+--text:#1a1a1a;
+--muted:#6c757d;
+--bg:#f8f9fa;
+--card:#ffffff;
 }
 
 body{
 font-family:'Montserrat',sans-serif;
-background:linear-gradient(-45deg,#0e0e0e,#1a1a1a,#000,#111);
-background-size:400% 400%;
-animation:gradientBG 15s ease infinite;
-color:white;
+background:linear-gradient(to bottom,#ffffff,#f4f4f4);
+color:var(--text);
+min-height:100vh;
+position:relative;
 overflow-x:hidden;
 }
 
-@keyframes gradientBG{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+/* Marca d'água */
+body::before{
+content:"";
+position:fixed;
+inset:0;
+background:url("imagens/cmim.png") no-repeat center;
+background-size:40%;
+opacity:0.06;
+z-index:-1;
+pointer-events:none;
 }
 
 /* NAVBAR */
 .navbar{
-background:rgba(0,0,0,0.7);
-backdrop-filter:blur(12px);
-border-radius:18px;
+background:white;
+border-radius:20px;
 margin:20px auto;
 width:95%;
-box-shadow:0 10px 40px rgba(0,0,0,0.6);
+box-shadow:0 8px 30px rgba(0,0,0,0.08);
+padding:12px 20px;
 transition:0.3s;
 }
 
 .navbar a{
-color:white!important;
+color:var(--text)!important;
 font-weight:600;
 position:relative;
 }
@@ -76,40 +83,35 @@ border-radius:30px;
 padding:6px 16px;
 font-weight:700;
 transition:0.3s;
-position:relative;
-overflow:hidden;
 }
 
 .nav-btn:hover{
 background:var(--primary);
-color:black;
+color:white;
 }
 
 /* BANNER */
 .banner{
-position:relative;
-padding:90px 30px;
+padding:80px 30px;
 text-align:center;
 margin-bottom:70px;
 border-radius:30px;
 width:95%;
 margin-left:auto;
 margin-right:auto;
-background:linear-gradient(135deg,#000,#111);
-box-shadow:0 0 60px rgba(255,193,7,0.3);
-animation:fadeUp 1.2s ease;
+background:white;
+box-shadow:0 20px 60px rgba(0,0,0,0.08);
+animation:fadeUp 1s ease;
 }
 
 .banner h1{
 font-size:3rem;
 font-weight:800;
-background:linear-gradient(90deg,#ffc107,#fff);
--webkit-background-clip:text;
-color:transparent;
+color:var(--text);
 }
 
 .banner p{
-color:#ccc;
+color:var(--muted);
 font-size:1.2rem;
 margin-top:15px;
 }
@@ -128,7 +130,7 @@ background:var(--card);
 border-radius:20px;
 overflow:hidden;
 transition:0.4s;
-box-shadow:0 8px 25px rgba(0,0,0,0.5);
+box-shadow:0 10px 35px rgba(0,0,0,0.07);
 transform:translateY(40px);
 opacity:0;
 }
@@ -139,8 +141,8 @@ opacity:1;
 }
 
 .news-card:hover{
-transform:translateY(-10px) scale(1.02);
-box-shadow:0 12px 40px rgba(255,193,7,0.3);
+transform:translateY(-8px);
+box-shadow:0 18px 45px rgba(0,0,0,0.12);
 }
 
 .news-card img{
@@ -150,7 +152,7 @@ transition:0.4s;
 }
 
 .news-card:hover img{
-transform:scale(1.1);
+transform:scale(1.05);
 }
 
 .news-title{
@@ -159,26 +161,27 @@ font-weight:800;
 
 .btn-cmim{
 background:var(--primary);
-color:black;
+color:white;
 font-weight:700;
 border-radius:40px;
 padding:8px 20px;
-transition:0.3s;
 border:none;
+transition:0.3s;
 }
 
 .btn-cmim:hover{
 transform:scale(1.05);
-box-shadow:0 0 20px var(--primary);
+box-shadow:0 0 20px rgba(255,193,7,0.5);
 }
 
 /* FOOTER */
 footer{
-background:#000;
-color:#777;
+background:white;
+color:var(--muted);
 padding:30px;
 margin-top:100px;
 text-align:center;
+box-shadow:0 -5px 20px rgba(0,0,0,0.05);
 }
 
 /* ANIMAÇÃO */
@@ -203,25 +206,14 @@ to{opacity:1;transform:translateY(0);}
 <div class="collapse navbar-collapse" id="menu">
 
 <ul class="navbar-nav me-auto">
-
 <li class="nav-item"><a class="nav-link" href="#">Tabela</a></li>
-
-<li class="nav-item dropdown">
-<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Torneios</a>
-<ul class="dropdown-menu bg-dark">
-<li><a class="dropdown-item text-light" href="#">Liga CMIM</a></li>
-<li><a class="dropdown-item text-light" href="#">CMIM Open</a></li>
-<li><a class="dropdown-item text-light" href="#">Insalubrão</a></li>
-</ul>
-</li>
-
+<li class="nav-item"><a class="nav-link" href="#">Torneios</a></li>
 <li class="nav-item"><a class="nav-link" href="#">Jogadores</a></li>
 <li class="nav-item"><a class="nav-link" href="#">Punições</a></li>
 <li class="nav-item"><a class="nav-link" href="#">Queues</a></li>
 <li class="nav-item"><a class="nav-link" href="#">Loja</a></li>
 <li class="nav-item"><a class="nav-link" href="#">Stream</a></li>
 <li class="nav-item"><a class="nav-link" href="#">Cartola</a></li>
-
 </ul>
 
 <div class="d-flex align-items-center">
@@ -240,7 +232,6 @@ to{opacity:1;transform:translateY(0);}
 </div>
 
 <div class="container">
-
 <h3 class="section-title">🔥 Destaques da Semana</h3>
 
 <div class="row g-4">
@@ -271,7 +262,7 @@ to{opacity:1;transform:translateY(0);}
 <div class="news-card">
 <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" class="w-100">
 <div class="p-4">
-<h5 class="news-title">CMIM News: The bonecão</h5>
+<h5 class="news-title">The bonecão</h5>
 <p>JG's do insalubrão são todos horríveis.</p>
 <button class="btn-cmim">Ver leaks</button>
 </div>
@@ -299,7 +290,6 @@ to{opacity:1;transform:translateY(0);}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-// Animação ao scroll
 const cards = document.querySelectorAll('.news-card');
 const observer = new IntersectionObserver(entries => {
 entries.forEach(entry => {
@@ -308,7 +298,6 @@ entry.target.classList.add('show');
 }
 });
 },{threshold:0.2});
-
 cards.forEach(card => observer.observe(card));
 </script>
 
