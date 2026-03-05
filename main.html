@@ -1,317 +1,316 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>CMIM</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>CMIM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-    font-family: 'Montserrat', sans-serif;
-    background-color: #f7f7f7;
-    position: relative;
-    min-height: 100vh;
+<style>
+:root{
+--primary:#ffc107;
+--dark:#0e0e0e;
+--card:#161616;
+--glass:rgba(255,255,255,0.05);
 }
 
-        body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: url("imagens/cmim.png") no-repeat center;
-    background-size: 100%; /* ajuste se quiser maior/menor */
-            background-position: center 100%;
-    opacity: 0.3; /* 30% */
-    z-index: -1;
-    pointer-events: none;
-}
-        
-
-        /* NAVBAR FLUTUANTE */
-        .navbar {
-            background: #000;
-            border-radius: 16px;
-            margin: 20px auto;
-            width: 95%;
-            position: sticky;
-            top: 15px;
-            z-index: 1000;
-            box-shadow: 0 12px 25px rgba(0,0,0,0.25);
-        }
-
-        .navbar a {
-            color: #fff !important;
-            font-weight: 600;
-        }
-
-        .navbar a:hover {
-            color: #ffc107 !important;
-        }
-
-        .perfil {
-            color: #ffc107;
-            font-weight: 800;
-        }
-
-        /* DROPDOWN */
-        .dropdown-menu {
-            background: #111;
-            border-radius: 12px;
-            border: none;
-        }
-
-        .dropdown-item {
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .dropdown-item:hover {
-            background: #ffc107;
-            color: #000;
-        }
-
-        /* BOTÕES AJUDA / REPORT */
-        .nav-btn {
-            border: 2px solid #ffc107;
-            color: #ffc107;
-            border-radius: 20px;
-            padding: 4px 14px;
-            font-weight: 700;
-            margin-left: 10px;
-            transition: 0.3s;
-            text-decoration: none;
-        }
-
-        .nav-btn:hover {
-            background: #ffc107;
-            color: #000;
-        }
-
-        /* BANNER */
-        .banner {
-    position: relative;
-    color: #ffc107;
-    padding: 50px;
-    text-align: center;
-    margin-bottom: 50px;
-    border-radius: 20px;
-    width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-    overflow: hidden;
-    background: #000;
+body{
+font-family:'Montserrat',sans-serif;
+background:linear-gradient(-45deg,#0e0e0e,#1a1a1a,#000,#111);
+background-size:400% 400%;
+animation:gradientBG 15s ease infinite;
+color:white;
+overflow-x:hidden;
 }
 
-        /* NEWS CARDS */
-        .news-card {
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            height: 100%;
-        }
+@keyframes gradientBG{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
 
-        .news-card:hover {
-            transform: translateY(-6px);
-        }
+/* NAVBAR */
+.navbar{
+background:rgba(0,0,0,0.7);
+backdrop-filter:blur(12px);
+border-radius:18px;
+margin:20px auto;
+width:95%;
+box-shadow:0 10px 40px rgba(0,0,0,0.6);
+transition:0.3s;
+}
 
-        .news-card img {
-            height: 200px;
-            object-fit: cover;
-        }
+.navbar a{
+color:white!important;
+font-weight:600;
+position:relative;
+}
 
-        .news-title {
-            font-weight: 800;
-        }
+.navbar a::after{
+content:"";
+position:absolute;
+bottom:-4px;
+left:0;
+width:0%;
+height:2px;
+background:var(--primary);
+transition:0.3s;
+}
 
-        .btn-cmim {
-            background: #ffc107;
-            color: #000;
-            font-weight: 700;
-            border-radius: 30px;
-            padding: 6px 18px;
-            text-decoration: none;
-        }
+.navbar a:hover::after{
+width:100%;
+}
 
-        .btn-cmim:hover {
-            background: #000;
-            color: #ffc107;
-        }
+.perfil{
+color:var(--primary);
+font-weight:800;
+}
 
-        .section-title {
-            font-weight: 800;
-            margin-bottom: 25px;
-            border-left: 6px solid #ffc107;
-            padding-left: 12px;
-        }
+/* BOTÕES */
+.nav-btn{
+border:2px solid var(--primary);
+color:var(--primary);
+border-radius:30px;
+padding:6px 16px;
+font-weight:700;
+transition:0.3s;
+position:relative;
+overflow:hidden;
+}
 
-        footer {
-            background: #000;
-            color: #aaa;
-            padding: 25px;
-            margin-top: 80px;
-            text-align: center;
-        }
-    </style>
+.nav-btn:hover{
+background:var(--primary);
+color:black;
+}
+
+/* BANNER */
+.banner{
+position:relative;
+padding:90px 30px;
+text-align:center;
+margin-bottom:70px;
+border-radius:30px;
+width:95%;
+margin-left:auto;
+margin-right:auto;
+background:linear-gradient(135deg,#000,#111);
+box-shadow:0 0 60px rgba(255,193,7,0.3);
+animation:fadeUp 1.2s ease;
+}
+
+.banner h1{
+font-size:3rem;
+font-weight:800;
+background:linear-gradient(90deg,#ffc107,#fff);
+-webkit-background-clip:text;
+color:transparent;
+}
+
+.banner p{
+color:#ccc;
+font-size:1.2rem;
+margin-top:15px;
+}
+
+/* SECTION */
+.section-title{
+font-weight:800;
+margin-bottom:40px;
+border-left:6px solid var(--primary);
+padding-left:14px;
+}
+
+/* CARDS */
+.news-card{
+background:var(--card);
+border-radius:20px;
+overflow:hidden;
+transition:0.4s;
+box-shadow:0 8px 25px rgba(0,0,0,0.5);
+transform:translateY(40px);
+opacity:0;
+}
+
+.news-card.show{
+transform:translateY(0);
+opacity:1;
+}
+
+.news-card:hover{
+transform:translateY(-10px) scale(1.02);
+box-shadow:0 12px 40px rgba(255,193,7,0.3);
+}
+
+.news-card img{
+height:220px;
+object-fit:cover;
+transition:0.4s;
+}
+
+.news-card:hover img{
+transform:scale(1.1);
+}
+
+.news-title{
+font-weight:800;
+}
+
+.btn-cmim{
+background:var(--primary);
+color:black;
+font-weight:700;
+border-radius:40px;
+padding:8px 20px;
+transition:0.3s;
+border:none;
+}
+
+.btn-cmim:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px var(--primary);
+}
+
+/* FOOTER */
+footer{
+background:#000;
+color:#777;
+padding:30px;
+margin-top:100px;
+text-align:center;
+}
+
+/* ANIMAÇÃO */
+@keyframes fadeUp{
+from{opacity:0;transform:translateY(40px);}
+to{opacity:1;transform:translateY(0);}
+}
+</style>
 </head>
+
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
+<div class="container-fluid">
 
-        <a class="navbar-brand fw-bold text-warning" href="#">CMIM</a>
+<a class="navbar-brand fw-bold text-warning" href="#">CMIM</a>
 
-        <button class="navbar-toggler bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<button class="navbar-toggler bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+<span class="navbar-toggler-icon"></span>
+</button>
 
-        <div class="collapse navbar-collapse" id="menu">
+<div class="collapse navbar-collapse" id="menu">
 
-            <ul class="navbar-nav me-auto">
+<ul class="navbar-nav me-auto">
 
-                <li class="nav-item">
-    <a class="nav-link" href="bar/tabela.html">Tabela</a>
+<li class="nav-item"><a class="nav-link" href="#">Tabela</a></li>
+
+<li class="nav-item dropdown">
+<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Torneios</a>
+<ul class="dropdown-menu bg-dark">
+<li><a class="dropdown-item text-light" href="#">Liga CMIM</a></li>
+<li><a class="dropdown-item text-light" href="#">CMIM Open</a></li>
+<li><a class="dropdown-item text-light" href="#">Insalubrão</a></li>
+</ul>
 </li>
 
-                <!-- TORNEIOS -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        Torneios
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Liga CMIM</a></li>
-                        <li><a class="dropdown-item" href="#">CMIM Open</a></li>
-                        <li><a class="dropdown-item" href="#">Insalubrão</a></li>
-                    </ul>
-                </li>
+<li class="nav-item"><a class="nav-link" href="#">Jogadores</a></li>
+<li class="nav-item"><a class="nav-link" href="#">Punições</a></li>
+<li class="nav-item"><a class="nav-link" href="#">Queues</a></li>
+<li class="nav-item"><a class="nav-link" href="#">Loja</a></li>
+<li class="nav-item"><a class="nav-link" href="#">Stream</a></li>
+<li class="nav-item"><a class="nav-link" href="#">Cartola</a></li>
 
-                <li class="nav-item">
-    <a class="nav-link" href="bar/jogadores.html">Jogadores</a>
-</li>
-                <li class="nav-item">
-    <a class="nav-link" href="bar/penalidades.html">Punições</a>
-</li>
-                <li class="nav-item">
-    <a class="nav-link" href="bar/queues.html">Queues</a>
-</li>
+</ul>
 
+<div class="d-flex align-items-center">
+<a href="#" class="perfil me-3">Perfil: 11gaia11</a>
+<a href="#" class="nav-btn">Ajuda</a>
+<a href="#" class="nav-btn">Report</a>
+</div>
 
-                <!-- ÁREA DE MEMBROS -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                        Área de Membros
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Vídeos</a></li>
-                        <li><a class="dropdown-item" href="#">Aulas</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item">
-    <a class="nav-link" href="bar/loja.html">Loja</a>
-</li>
-
-                <li class="nav-item"><a class="nav-link" href="#">Stream</a></li>
-                <li class="nav-item">
-    <a class="nav-link" href="bar/cartola.html">Cartola</a>
-</li>
-
-            </ul>
-
-            <div class="d-flex align-items-center">
-                <a href="bar/perfil.html" class="perfil me-3">
-  Perfil: 11gaia11
-</a>
-                <a href="#" class="nav-btn">Ajuda</a>
-                <a href="#" class="nav-btn">Report</a>
-            </div>
-
-        </div>
-    </div>
+</div>
+</div>
 </nav>
 
-<!-- BANNER -->
 <div class="banner">
-    <h1>Comunidade Mais Insalubre Do Mundo</h1>
-    <p>Campeões • Fofocas • Vazamentos • Tretas</p>
+<h1>Comunidade Mais Insalubre Do Mundo</h1>
+<p>Campeões • Fofocas • Vazamentos • Tretas</p>
 </div>
 
-<!-- CONTEÚDO -->
 <div class="container">
 
-    <h3 class="section-title">🔥 Destaques da Semana</h3>
+<h3 class="section-title">🔥 Destaques da Semana</h3>
 
-    <div class="row g-4">
+<div class="row g-4">
 
-        <div class="col-md-3">
-            <div class="news-card">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" class="w-100">
-                <div class="p-3">
-                    <h5 class="news-title">Campeões da Semana</h5>
-                    <p>O time mais insalubre dominou tudo.</p>
-                    <a href="#" class="btn-cmim">Ver mais</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="news-card">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" class="w-100">
-                <div class="p-3">
-                    <h5 class="news-title">CMIM NEWS: A volta de Synthwave</h5>
-                    <p>Com retorno marcado para o dia 01/03... 👀</p>
-                    <a href="#" class="btn-cmim">Abrir</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="news-card">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" class="w-100">
-                <div class="p-3">
-                    <h5 class="news-title">CMIM News: The bonecão</h5>
-                    <p>Bonecão Diz que JG's do insalubrão são todos horriveis</p>
-                    <a href="#" class="btn-cmim">Ver leaks</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="news-card">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" class="w-100">
-                <div class="p-3">
-                    <h5 class="news-title">CMIM NEWS: Por onde anda o Arroz?</h5>
-                    <p>Um dos players mais carismaticos do cmim[...]</p>
-                    <a href="#" class="btn-cmim">Ver barraco</a>
-                </div>
-            </div>
-        </div>
-
-    </div>
+<div class="col-md-3">
+<div class="news-card">
+<img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" class="w-100">
+<div class="p-4">
+<h5 class="news-title">Campeões da Semana</h5>
+<p>O time mais insalubre dominou tudo.</p>
+<button class="btn-cmim">Ver mais</button>
+</div>
+</div>
 </div>
 
-<!-- FOOTER -->
+<div class="col-md-3">
+<div class="news-card">
+<img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" class="w-100">
+<div class="p-4">
+<h5 class="news-title">CMIM NEWS: A volta de Synthwave</h5>
+<p>Retorno marcado para 01/03 👀</p>
+<button class="btn-cmim">Abrir</button>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="news-card">
+<img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" class="w-100">
+<div class="p-4">
+<h5 class="news-title">CMIM News: The bonecão</h5>
+<p>JG's do insalubrão são todos horríveis.</p>
+<button class="btn-cmim">Ver leaks</button>
+</div>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="news-card">
+<img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" class="w-100">
+<div class="p-4">
+<h5 class="news-title">Por onde anda o Arroz?</h5>
+<p>Um dos players mais carismáticos do CMIM...</p>
+<button class="btn-cmim">Ver barraco</button>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
 <footer>
-    © 2026 CMIM — A comunidade mais insalubre do mundo
+© 2026 CMIM — A comunidade mais insalubre do mundo
 </footer>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+<script>
+// Animação ao scroll
+const cards = document.querySelectorAll('.news-card');
+const observer = new IntersectionObserver(entries => {
+entries.forEach(entry => {
+if(entry.isIntersecting){
+entry.target.classList.add('show');
+}
+});
+},{threshold:0.2});
+
+cards.forEach(card => observer.observe(card));
+</script>
+
 </body>
-
 </html>
-
-
-
-
-
-
-
