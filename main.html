@@ -5,7 +5,10 @@
 <title>CMIM</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
@@ -26,7 +29,7 @@ color:var(--text);
 overflow-x:hidden;
 }
 
-/* Marca d’água elegante */
+/* Marca d’água */
 body::before{
 content:"";
 position:fixed;
@@ -38,7 +41,7 @@ z-index:-1;
 pointer-events:none;
 }
 
-/* NAVBAR PROFISSIONAL */
+/* NAVBAR */
 .navbar{
 background:#ffffff;
 border-radius:18px;
@@ -72,7 +75,7 @@ color:var(--primary);
 font-weight:800;
 }
 
-/* DROPDOWN */
+/* Dropdown */
 .dropdown-menu{
 background:#fff;
 border:none;
@@ -90,7 +93,7 @@ background:var(--primary);
 color:#fff;
 }
 
-/* BOTÕES NAV */
+/* Botões */
 .nav-btn{
 border:2px solid var(--primary);
 color:var(--primary);
@@ -106,7 +109,7 @@ color:#fff;
 transform:translateY(-2px);
 }
 
-/* BANNER */
+/* Banner */
 .banner{
 background:#ffffff;
 border-radius:30px;
@@ -131,7 +134,7 @@ font-size:1.1rem;
 margin-top:10px;
 }
 
-/* SECTION */
+/* Section */
 .section-title{
 font-weight:800;
 margin-bottom:30px;
@@ -139,7 +142,7 @@ border-left:6px solid var(--primary);
 padding-left:14px;
 }
 
-/* CARDS */
+/* Cards */
 .news-card{
 background:var(--card);
 border-radius:18px;
@@ -189,7 +192,7 @@ transform:scale(1.05);
 box-shadow:0 8px 20px rgba(255,193,7,0.4);
 }
 
-/* FOOTER */
+/* Footer */
 footer{
 background:#ffffff;
 color:#777;
@@ -199,7 +202,7 @@ text-align:center;
 box-shadow:0 -5px 20px rgba(0,0,0,0.05);
 }
 
-/* ANIMAÇÃO */
+/* Animation */
 @keyframes fadeUp{
 from{opacity:0;transform:translateY(40px);}
 to{opacity:1;transform:translateY(0);}
@@ -207,33 +210,9 @@ to{opacity:1;transform:translateY(0);}
 </style>
 </head>
 
-<script>
-/* animação ao scroll */
-const cards = document.querySelectorAll('.news-card');
-
-const observer = new IntersectionObserver(entries=>{
-entries.forEach(entry=>{
-if(entry.isIntersecting){
-entry.target.classList.add('show');
-}
-});
-},{threshold:0.15});
-
-cards.forEach(card=>observer.observe(card));
-
-/* efeito navbar ao scroll */
-window.addEventListener("scroll",()=>{
-const nav=document.querySelector(".navbar");
-if(window.scrollY>30){
-nav.classList.add("scrolled");
-}else{
-nav.classList.remove("scrolled");
-}
-});
-</script>
-  
 <body>
 
+<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg">
 <div class="container-fluid">
 
@@ -246,18 +225,18 @@ nav.classList.remove("scrolled");
 <div class="collapse navbar-collapse" id="menu">
 
 <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="#">Tabela</a></li>
+<li class="nav-item"><a class="nav-link" href="bar/tabela.html">Tabela</a></li>
 <li class="nav-item"><a class="nav-link" href="#">Torneios</a></li>
-<li class="nav-item"><a class="nav-link" href="#">Jogadores</a></li>
-<li class="nav-item"><a class="nav-link" href="#">Punições</a></li>
-<li class="nav-item"><a class="nav-link" href="#">Queues</a></li>
-<li class="nav-item"><a class="nav-link" href="#">Loja</a></li>
+<li class="nav-item"><a class="nav-link" href="bar/jogadores.html">Jogadores</a></li>
+<li class="nav-item"><a class="nav-link" href="bar/penalidades.html">Punições</a></li>
+<li class="nav-item"><a class="nav-link" href="bar/queues.html">Queues</a></li>
+<li class="nav-item"><a class="nav-link" href="bar/loja.html">Loja</a></li>
 <li class="nav-item"><a class="nav-link" href="#">Stream</a></li>
-<li class="nav-item"><a class="nav-link" href="#">Cartola</a></li>
+<li class="nav-item"><a class="nav-link" href="bar/cartola.html">Cartola</a></li>
 </ul>
 
 <div class="d-flex align-items-center">
-<a href="#" class="perfil me-3">Perfil: 11gaia11</a>
+<a href="bar/perfil.html" class="perfil me-3">Perfil: 11gaia11</a>
 <a href="#" class="nav-btn">Ajuda</a>
 <a href="#" class="nav-btn">Report</a>
 </div>
@@ -266,11 +245,13 @@ nav.classList.remove("scrolled");
 </div>
 </nav>
 
+<!-- BANNER -->
 <div class="banner">
 <h1>Comunidade Mais Insalubre Do Mundo</h1>
 <p>Campeões • Fofocas • Vazamentos • Tretas</p>
 </div>
 
+<!-- CONTEÚDO -->
 <div class="container">
 <h3 class="section-title">🔥 Destaques da Semana</h3>
 
@@ -327,20 +308,36 @@ nav.classList.remove("scrolled");
 © 2026 CMIM — A comunidade mais insalubre do mundo
 </footer>
 
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- Scripts -->
 <script>
-const cards = document.querySelectorAll('.news-card');
-const observer = new IntersectionObserver(entries => {
-entries.forEach(entry => {
-if(entry.isIntersecting){
-entry.target.classList.add('show');
-}
+document.addEventListener("DOMContentLoaded", function(){
+
+  const cards = document.querySelectorAll('.news-card');
+
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('show');
+      }
+    });
+  },{threshold:0.15});
+
+  cards.forEach(card=>observer.observe(card));
+
+  window.addEventListener("scroll",()=>{
+    const nav=document.querySelector(".navbar");
+    if(window.scrollY>30){
+      nav.classList.add("scrolled");
+    }else{
+      nav.classList.remove("scrolled");
+    }
+  });
+
 });
-},{threshold:0.2});
-cards.forEach(card => observer.observe(card));
 </script>
 
 </body>
 </html>
-
